@@ -1,0 +1,15 @@
+[package]
+name = "util"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+color-eyre = { workspace = true }
+reqwest = "0.12.24"
+tokio = { workspace = true }
+dotenvy = "0.15.7"
+cached = { version = "0.56.0", features = [
+  "proc_macro",
+  "disk_store",
+  "async",
+] }

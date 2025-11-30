@@ -1,0 +1,20 @@
+[workspace]
+members = [
+    "day-*",
+    "day-01",
+    "util",
+]
+resolver = "2"
+
+[workspace.dependencies]
+color-eyre = "0.6"
+itertools = "0.14"
+nom = "8.0"
+rstest = "0.26"
+
+[workspace.dependencies.tokio]
+version = "1.0"
+features = ["full"]
+
+[workspace.dependencies.util]
+path = "util"
