@@ -15,7 +15,7 @@ use color_eyre::{Result, eyre::eyre};
 )]
 pub async fn get_aoc_input(year: usize, day: usize) -> Result<String> {
     println!("Fetching input for year {}, day {}", year, day);
-    dotenvy::dotenv()?;
+    let _ = dotenvy::dotenv();
     let client = reqwest::Client::new();
     let response = client
         .get(format!(

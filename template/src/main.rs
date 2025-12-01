@@ -11,12 +11,12 @@ async fn main() -> Result<()> {
         .and_then(|s| s.parse::<usize>().ok())
         .expect("Failed to parse day number from crate name");
 
-    let input = util::get_aoc_input(2024, day).await?;
+    let input = util::get_aoc_input(2025, day).await?;
 
     let part1_result = {{crate_name}}::part1(&input);
-    let part2_result = {{crate_name}}::part2(&input);
-
     println!("Day {}: Part 1: {:?}", day, part1_result);
+
+    let part2_result = {{crate_name}}::part2(&input);
     println!("Day {}: Part 2: {:?}", day, part2_result);
 
     Ok(())
