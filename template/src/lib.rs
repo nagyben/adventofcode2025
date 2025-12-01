@@ -1,8 +1,8 @@
-pub fn part1(input: &str) -> &str {
+pub fn part1(input: &str) -> String {
     todo!("Implement part 1");
 }
 
-pub fn part2(input: &str) -> &str {
+pub fn part2(input: &str) -> String {
     todo!("Implement part 2");
 }
 
