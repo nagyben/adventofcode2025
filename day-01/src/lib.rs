@@ -1,5 +1,3 @@
-use color_eyre::eyre::eyre;
-
 pub fn part1(input: &str) -> String {
     let input_data = parse_input(input);
     let mut position: isize = 50;
@@ -19,7 +17,28 @@ pub fn part1(input: &str) -> String {
 }
 
 pub fn part2(input: &str) -> String {
-    todo!("Implement part 2");
+    let input_data = parse_input(input);
+    let mut position: isize = 50;
+    let mut times_zero = 0;
+    for value in input_data.iter() {
+        for _ in 0..value.abs() {
+            if *value > 0 {
+                position += 1;
+            } else {
+                position -= 1;
+            }
+            if position > 99 {
+                position = 0;
+            } else if position < 0 {
+                position = 99;
+            }
+            if position == 0 {
+                times_zero += 1;
+            }
+        }
+    }
+
+    times_zero.to_string()
 }
 
 fn parse_input(input: &str) -> Vec<isize> {
@@ -58,9 +77,18 @@ L82"#;
 
     #[test]
     fn test_part2() {
-        let input = r#""#;
+        let input = r#"L68
+L30
+R48
+L5
+R60
+L55
+L1
+L99
+R14
+L82"#;
 
-        let expected = r#""#;
+        let expected = r#"6"#;
 
         let result = part2(input);
         assert_eq!(result, expected);
