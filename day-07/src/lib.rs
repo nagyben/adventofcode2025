@@ -1,3 +1,4 @@
+use pathfinding::prelude::count_paths;
 use std::collections::HashSet;
 
 type Grid = Vec<Vec<char>>;
@@ -47,7 +48,20 @@ fn print_grid(grid: &Grid) {
 }
 
 pub fn part2(input: &str) -> String {
-    todo!("Implement part 2");
+    let grid = parse_grid(input);
+    let start_position = find_start_position(&grid);
+    count_paths(
+        start_position,
+        |&(x, y)| {
+            if grid[y][x] == '^' {
+                vec![(x + 1, y), (x - 1, y)]
+            } else {
+                vec![(x, y + 1)]
+            }
+        },
+        |&(_, y)| y >= grid.len(),
+    )
+    .to_string()
 }
 
 fn parse_grid(input: &str) -> Vec<Vec<char>> {
