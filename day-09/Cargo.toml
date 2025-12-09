@@ -10,3 +10,5 @@ itertools = { workspace = true }
 color-eyre = { workspace = true }
 tokio = { workspace = true }
 util = { workspace = true }
+geo = "0.32.0"
+image = "0.25.9"
