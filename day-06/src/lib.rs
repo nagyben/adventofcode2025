@@ -31,10 +31,40 @@ pub fn part1(input: &str) -> String {
         .to_string()
 }
 
+type Grid<T> = Vec<Vec<T>>;
+
 pub fn part2(input: &str) -> String {
-    let (numbers, operators) = part2::parse_input(input);
-    let numbers = vec_to_dataframe(numbers);
-    todo!()
+    let grid: Grid<char> = input.lines().map(|line| line.chars().collect()).collect();
+    let max_cols = grid.iter().map(|row| row.len()).max().unwrap_or(0);
+
+    let mut stack: Vec<usize> = Vec::new();
+    let mut sum: usize = 0;
+    for col_idx in (0..max_cols).rev() {
+        let column = get_column(&grid, col_idx);
+        let operator = column.last().unwrap();
+        let num: String = column.iter().take(column.len() - 1).collect();
+        if let Ok(num) = num.replace(" ", "").parse::<usize>() {
+            stack.push(num);
+        }
+        match operator {
+            '+' => {
+                sum += stack.iter().sum::<usize>();
+                stack.clear();
+            }
+            '*' => {
+                sum += stack.iter().product::<usize>();
+                stack.clear();
+            }
+            _ => {}
+        }
+    }
+    sum.to_string()
+}
+
+fn get_column(grid: &[Vec<char>], idx: usize) -> Vec<char> {
+    grid.iter()
+        .map(|row| row.get(idx).cloned().unwrap_or(' '))
+        .collect::<Vec<char>>()
 }
 
 /// holds the operator and the column width
@@ -59,45 +89,6 @@ mod part1 {
     fn parse_number_row(input: &str) -> IResult<&str, Vec<u64>> {
         let (input, _) = multispace0.parse(input)?;
         separated_list1(space1, digit1.map_res(|d: &str| d.parse::<u64>())).parse(input)
-    }
-}
-
-mod part2 {
-    use nom::{
-        bytes::complete::{take, take_till},
-        combinator::{eof, rest},
-        error::Error,
-        multi::many1,
-    };
-
-    use super::*;
-    pub(crate) fn parse_input(input: &str) -> (Vec<Vec<u64>>, Vec<Operator>) {
-        let operators = parse_operators(input);
-
-        let numbers: Vec<Vec<&str>> = input
-            .lines()
-            .map(|mut line| {
-                let mut number: &str;
-                let mut row: Vec<&str> = vec![];
-                for operator in operators.iter() {
-                    let n = match operator {
-                        Operator::Multiply(n) => n,
-                        Operator::Add(n) => n,
-                    };
-
-                    (line, number) = alt((take::<_, _, nom::error::Error<&str>>(*n), rest))
-                        .parse(line)
-                        .unwrap();
-
-                    (line, _) = space0::<_, nom::error::Error<&str>>.parse(line).unwrap(); // take the space
-                    row.push(number);
-                }
-                row
-            })
-            .collect();
-
-        println!("{:?}", numbers);
-        todo!()
     }
 }
 
@@ -184,29 +175,5 @@ mod tests {
 
         let result = part2(input);
         assert_eq!(result, expected);
-    }
-
-    #[test]
-    fn test_parse_input_part2() {
-        let input = r#"123 328  51 64
- 45 64  387 23
-  6 98  215 314
-*   +   *   +
-"#;
-        let expected_numbers = vec![
-            [123, 328, 510, 640],
-            [45, 640, 387, 230],
-            [6, 980, 215, 314],
-        ];
-
-        let expected_operators = vec![
-            Operator::Multiply(3),
-            Operator::Add(3),
-            Operator::Multiply(3),
-            Operator::Add(3),
-        ];
-        let (actual_numbers, actual_operators) = part2::parse_input(input);
-        assert_eq!(actual_numbers, expected_numbers);
-        assert_eq!(actual_operators, expected_operators);
     }
 }
